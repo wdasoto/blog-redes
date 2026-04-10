@@ -1,0 +1,38 @@
+{% extends 'posts/base.html' %}
+
+{% block titulo %}{{ categoria.nombre }} - Blog de Redes{% endblock %}
+
+{% block contenido %}
+
+<h2 style="color: #1e3a8a; margin-bottom: 1rem;">
+    📁 Artículos en: {{ categoria.nombre }}
+</h2>
+
+{% if categoria.descripcion %}
+<p style="margin-bottom: 2rem; color: #666; font-style: italic;">
+    {{ categoria.descripcion }}
+</p>
+{% endif %}
+
+{% for post in posts %}
+<div class="post-card">
+    <h2><a href="{% url 'detalle_post' post.slug %}">{{ post.titulo }}</a></h2>
+    
+    <div class="meta">
+        <span class="nivel-badge nivel-{{ post.nivel_dificultad }}">
+            {{ post.get_nivel_dificultad_display }}
+        </span>
+        
+        {{ post.fecha_publicacion|date:"d/m/Y" }} • 
+        👁 {{ post.vistas }} vistas
+    </div>
+    
+    <p>{{ post.resumen|default:post.contenido|truncatewords:40 }}</p>
+</div>
+{% empty %}
+<div class="post-card">
+    <p>No hay artículos en esta categoría.</p>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Blog de Redes{% endblock %}</title>
+    
+    <style>
+        /* Reset básico */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        /* Navegación */
+        nav {
+            background: #1e40af;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Grid de contenido */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        /* Tarjetas de posts */
+        .post-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .post-card h2 {
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-card h2 a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .post-card h2 a:hover {
+            color: #3b82f6;
+        }
+        
+        .meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .nivel-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .nivel-principiante { background: #dcfce7; color: #166534; }
+        .nivel-intermedio { background: #fef3c7; color: #92400e; }
+        .nivel-avanzado { background: #ffedd5; color: #9a3412; }
+        .nivel-experto { background: #fee2e2; color: #991b1b; }
+        
+        /* Sidebar */
+        aside {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            height: fit-content;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        aside h3 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        
+        .categoria-lista {
+            list-style: none;
+        }
+        
+        .categoria-lista li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .categoria-lista a {
+            color: #374151;
+            text-decoration: none;
+            display: block;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .categoria-lista a:hover {
+            background: #f3f4f6;
+            color: #1e3a8a;
+        }
+        
+        /* Detalle de post */
+        .post-detail {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .post-detail h1 {
+            color: #1e3a8a;
+            margin-bottom: 1rem;
+        }
+        
+        .post-content {
+            margin-top: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .post-content p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: #666;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🌐 Blog de Redes y Networking</h1>
+            <p>Aprende CCNA, Cisco, TCP/IP y tecnologías de red</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <a href="{% url 'lista_posts' %}">Inicio</a>
+            <a href="/admin/">Panel Admin</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="content-grid">
+            <main>
+                {% block contenido %}{% endblock %}
+            </main>
+            
+            <aside>
+                <h3>Categorías</h3>
+                <ul class="categoria-lista">
+                    {% for cat in categorias %}
+                    <li>
+                        <a href="{% url 'categoria_detalle' cat.slug %}">
+                            {{ cat.nombre }}
+                        </a>
+                    </li>
+                    {% empty %}
+                    <li>No hay categorías</li>
+                    {% endfor %}
+                </ul>
+            </aside>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Blog de Redes. Creado con Django.</p>
+        </div>
+    </footer>
+</body>
+</html>

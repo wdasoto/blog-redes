@@ -1,0 +1,65 @@
+{% extends 'posts/base.html' %}
+
+{% block titulo %}{{ post.titulo }} - Blog de Redes{% endblock %}
+
+{% block contenido %}
+<div class="post-detail">
+    <span class="nivel-badge nivel-{{ post.nivel_dificultad }}" style="font-size: 1rem; margin-bottom: 1rem; display: inline-block;">
+        {{ post.get_nivel_dificultad_display }}
+    </span>
+    
+    <h1>{{ post.titulo }}</h1>
+    
+    <div class="meta" style="margin-bottom: 2rem;">
+        {% if post.categoria %}
+        <a href="{% url 'categoria_detalle' post.categoria.slug %}" 
+           style="color: #3b82f6; text-decoration: none;">
+            {{ post.categoria.nombre }}
+        </a> • 
+        {% endif %}
+        
+        Por {{ post.autor.get_full_name|default:post.autor }} • 
+        {{ post.fecha_publicacion|date:"d/m/Y H:i" }} • 
+        👁 {{ post.vistas }} vistas
+        
+        {% if post.etiquetas %}
+        <div style="margin-top: 0.5rem;">
+            🏷️ {{ post.etiquetas }}
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if post.imagen_destacada %}
+    <img src="{{ post.imagen_destacada.url }}" alt="{{ post.titulo }}" 
+         style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 2rem;">
+    {% endif %}
+    
+    <div class="post-content">
+        {{ post.contenido|linebreaks }}
+    </div>
+</div>
+
+{% if relacionados %}
+<div style="margin-top: 3rem;">
+    <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Artículos relacionados</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        {% for rel in relacionados %}
+        <div class="post-card">
+            <h4><a href="{% url 'detalle_post' rel.slug %}">{{ rel.titulo }}</a></h4>
+            <div class="meta">
+                <span class="nivel-badge nivel-{{ rel.nivel_dificultad }}" style="font-size: 0.75rem;">
+                    {{ rel.get_nivel_dificultad_display }}
+                </span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<a href="{% url 'lista_posts' %}" 
+   style="display: inline-block; margin-top: 2rem; color: #3b82f6; text-decoration: none;">
+   ← Volver al inicio
+</a>
+
+{% endblock %}

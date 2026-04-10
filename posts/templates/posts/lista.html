@@ -1,0 +1,55 @@
+{% extends 'posts/base.html' %}
+
+{% block titulo %}Inicio - Blog de Redes{% endblock %}
+
+{% block contenido %}
+
+{% if posts_destacados %}
+<h2 style="color: #1e3a8a; margin-bottom: 1rem;">📌 Destacados</h2>
+<div style="margin-bottom: 2rem;">
+    {% for post in posts_destacados %}
+    <div class="post-card" style="border-left: 4px solid #f59e0b;">
+        <h2><a href="{% url 'detalle_post' post.slug %}">{{ post.titulo }}</a></h2>
+        <div class="meta">
+            <span class="nivel-badge nivel-{{ post.nivel_dificultad }}">
+                {{ post.get_nivel_dificultad_display }}
+            </span>
+            {{ post.fecha_publicacion|date:"d/m/Y" }}
+        </div>
+        <p>{{ post.resumen|default:post.contenido|truncatewords:30 }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<h2 style="color: #1e3a8a; margin-bottom: 1rem;">Últimos Artículos</h2>
+
+{% for post in posts %}
+<div class="post-card">
+    <h2><a href="{% url 'detalle_post' post.slug %}">{{ post.titulo }}</a></h2>
+    
+    <div class="meta">
+        <span class="nivel-badge nivel-{{ post.nivel_dificultad }}">
+            {{ post.get_nivel_dificultad_display }}
+        </span>
+        
+        {% if post.categoria %}
+        <a href="{% url 'categoria_detalle' post.categoria.slug %}" 
+           style="color: #3b82f6; text-decoration: none;">
+            {{ post.categoria.nombre }}
+        </a> • 
+        {% endif %}
+        
+        {{ post.fecha_publicacion|date:"d/m/Y" }} • 
+        👁 {{ post.vistas }} vistas
+    </div>
+    
+    <p>{{ post.resumen|default:post.contenido|truncatewords:40 }}</p>
+</div>
+{% empty %}
+<div class="post-card">
+    <p>No hay artículos publicados aún. <a href="/admin/">Crea el primero en el panel de administración</a>.</p>
+</div>
+{% endfor %}
+
+{% endblock %}
